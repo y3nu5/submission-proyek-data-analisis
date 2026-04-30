@@ -1,4 +1,4 @@
-#  Dashboard 📊 Dashboard Analisis E-Commerce
+#  📊 Dashboard Analisis E-Commerce
 
 ## Setup Environment - Shell/Terminal
 ```
