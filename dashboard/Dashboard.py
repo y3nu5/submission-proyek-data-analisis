@@ -62,10 +62,6 @@ if len(date_range_r) == 2:
     low_pct = (low / total) * 100
     mid_pct = (mid / total) * 100
 
-    # tampilkan angka
-    st.metric("⭐ Rating 4-5", f"{high_pct:.2f}%")
-    st.metric("⚠️ Rating 1-2", f"{low_pct:.2f}%")
-
     # pie chart
     fig1, ax1 = plt.subplots()
     ax1.pie(
