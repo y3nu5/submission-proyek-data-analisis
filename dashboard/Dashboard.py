@@ -27,14 +27,14 @@ product_sales['order_purchase_timestamp'] = pd.to_datetime(product_sales['order_
 # ===============================
 # 🔹 PERTANYAAN 1
 # ===============================
-st.header("⭐ Distribusi Review Score")
+st.header("⭐ Persentase Review Score (3 Bulan Terakhir)")
 
 min_date_r = order_reviews['review_creation_date'].min().date()
 max_date_r = order_reviews['review_creation_date'].max().date()
 
 date_range_r = st.date_input(
     "📅 Filter Rentang Tanggal Review",
-    value=[pd.to_datetime("2018-06-01").date(), pd.to_datetime("2018-08-31").date()],  
+    value=[pd.to_datetime("2018-06-01").date(), pd.to_datetime("2018-08-31").date()],
     min_value=min_date_r,
     max_value=max_date_r,
     key="filter_review"
@@ -46,13 +46,36 @@ if len(date_range_r) == 2:
         (order_reviews['review_creation_date'] <= pd.to_datetime(date_range_r[1]))
     ]
 
-    fig1, ax1 = plt.subplots()
-    sns.countplot(x='review_score', data=filtered_reviews, ax=ax1)
-    ax1.set_title("Distribusi Review Score 3 Bulan Terakhir")
-    ax1.set_ylabel("Jumlah Customer")
-    ax1.set_xlabel("Review Score")
-    st.pyplot(fig1)
+    total = filtered_reviews.shape[0]
 
+    high = filtered_reviews[
+        filtered_reviews['review_score'].isin([4,5])
+    ].shape[0]
+
+    low = filtered_reviews[
+        filtered_reviews['review_score'].isin([1,2])
+    ].shape[0]
+
+    mid = total - high - low
+
+    high_pct = (high / total) * 100
+    low_pct = (low / total) * 100
+    mid_pct = (mid / total) * 100
+
+    # tampilkan angka
+    st.metric("⭐ Rating 4-5", f"{high_pct:.2f}%")
+    st.metric("⚠️ Rating 1-2", f"{low_pct:.2f}%")
+
+    # pie chart
+    fig1, ax1 = plt.subplots()
+    ax1.pie(
+        [high, low, mid],
+        labels=['Rating 4-5', 'Rating 1-2', 'Rating 3'],
+        autopct='%1.1f%%'
+    )
+    ax1.set_title("Distribusi Persentase Review")
+
+    st.pyplot(fig1)
 # ===============================
 # 🔹 PERTANYAAN 2
 # ===============================
